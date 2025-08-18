@@ -1,28 +1,40 @@
 # Analytics Portfolio
 
-This portfolio showcases end-to-end analytics frameworks I’ve built and refined in professional settings, rebuilt here in open-source form.  
-It includes forecasting pipelines, marketing attribution frameworks, anomaly detection alerts, and interactive business intelligence dashboards.  
+Welcome to my analytics and data science portfolio.  
+This repository showcases end-to-end frameworks, models, and reporting approaches that highlight my ability to deliver business impact through analytics.
 
-The goal: **demonstrate depth in analytics engineering, reproducible workflows, and communication through polished reports.**
-
----
-
-## 📂 Project Index
-- **rs-py-integration** — Demonstrating R + Python interoperability  
-- **synthetic-data-factory** — Generating realistic test data for analytics workflows  
-- **forecasting-frameworks** — Advanced time-series forecasting pipelines  
-- **experiment-framework** — Scalable A/B testing design and analysis  
-- **attribution-roi** — Marketing attribution & ROI analysis framework  
-- **anomaly-alerting** — Automated anomaly detection and alerting system  
+The portfolio includes projects demonstrating forecasting, anomaly detection, attribution modeling, and reproducible reporting frameworks.
 
 ---
 
-## 🚀 Status
-- **Phase 1 (Live soon):** rs-py-integration, synthetic-data-factory, forecasting-frameworks  
-- **Phase 2 (Coming soon):** experiment-framework, attribution-roi, anomaly-alerting  
+## 📂 Projects
+
+- **Forecasting Frameworks**  
+  Advanced time series forecasting models (ARIMA, Prophet, Fable in R) with automation pipelines for accuracy tracking and error reduction.
+
+- **Anomaly Detection System**  
+  A reproducible framework for detecting anomalies in time series and transactional data, with automated reporting and alerting examples.
+
+- **Marketing Attribution & ROI**  
+  End-to-end attribution modeling using synthetic campaign data, including last-touch, multi-touch, and experimental lift approaches.
+
+- **Experimentation Frameworks**  
+  Templates and code for designing, running, and analyzing A/B tests and multivariate experiments, with statistical rigor.
+
+- **R/Python Integration Setup**  
+  Demonstrates running Python and R together in RStudio for flexible, hybrid workflows.
+
+- **Synthetic Data Generator**  
+  Utility framework for producing reproducible, synthetic datasets to support testing, demos, and experimentation.
 
 ---
 
-## 🔗 Quick Links
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/)  
-(Launching interactive notebooks directly in your browser — setup in progress.)
+## 🎯 Purpose
+
+This repo highlights:
+- Analytical frameworks with wide business application
+- Technical skills in R, Python, SQL, and BI tools
+- Reproducibility and storytelling with data
+- End-to-end ownership: from problem definition → data → model → insights → reporting
+
+---
