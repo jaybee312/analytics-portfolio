@@ -4,17 +4,17 @@ Phase 0 – Repo Setup & Foundations (4–6 hrs)
   0.1 Repository Initialization ✅
   0.2 Documentation polish (README, Deliverables, Schedule)
 
-Phase 1 – Core Frameworks (25–30 hrs)
+Phase 1 – Utilities & Integration (10–15 hrs)
+  3.1 R/Python Integration Setup
+  3.2 Synthetic Data Generator
+
+Phase 2 – Core Frameworks (25–30 hrs)
   1.1 Forecasting Frameworks
   1.2 Anomaly Detection System
 
-Phase 2 – Business Applications (20–25 hrs)
+Phase 3 – Business Applications (20–25 hrs)
   2.1 Marketing Attribution & ROI
   2.2 Experimentation Frameworks
-
-Phase 3 – Utilities & Integration (10–15 hrs)
-  3.1 R/Python Integration Setup
-  3.2 Synthetic Data Generator
 
 Phase 4 – Reporting & Polish (6–8 hrs)
   4.1 Add HTML/Markdown reports
