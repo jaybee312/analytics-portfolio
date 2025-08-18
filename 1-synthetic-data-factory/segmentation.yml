@@ -1,0 +1,58 @@
+seed: 312
+rows: 10000
+output: "data/segmentation.csv"
+
+columns:
+  - name: user_id
+    type: id_seq
+    prefix: "U"
+    width: 6
+
+  - name: channel_primary
+    type: categorical
+    levels: ["search","social","display","email","organic","direct"]
+    probs:  [0.30,    0.20,    0.15,     0.10,   0.15,     0.10]
+
+  - name: tenure_days
+    type: integer_negbin
+    mu: 300
+    size: 20
+
+  - name: sessions_30d
+    type: integer_pois
+    lambda: 8
+
+  - name: aov
+    type: numeric_log_normal
+    meanlog: 4.5
+    sdlog: 0.25
+
+  - name: orders_90d
+    type: integer_negbin
+    mu: 2.4
+    size: 1.3
+
+  - name: total_spend
+    type: derive
+    formula: "round(aov * orders_90d + noise, 2)"
+    noise: { type: numeric_normal, sd: 8 }
+
+rules:
+  - when: 'channel_primary == "email"'
+    update:
+      sessions_30d: { type: integer_pois, lambda: 10.5 }
+      orders_90d:   { type: integer_negbin, mu: 3.1, size: 1.5 }
+
+  - when: 'channel_primary == "display"'
+    update:
+      sessions_30d: { type: integer_pois, lambda: 6.5 }
+      orders_90d:   { type: integer_negbin, mu: 1.6, size: 1.0 }
+
+correlate:
+  - target: aov
+    with: sessions_30d
+    rho: 0.15
+
+missingness:
+  - cols: ["aov"]
+    p: 0.02
