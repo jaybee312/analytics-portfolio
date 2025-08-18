@@ -1,98 +1,26 @@
-===========================
- Analytics Portfolio Build Schedule
-===========================
+Analytics Portfolio Schedule (Target: 60–80 hours)
 
-This schedule provides a full breakdown of time to build, document, and polish the analytics portfolio.
-Phase 1 (Launch) is capped at ~60–80 hours. Phase 2 (Post-Launch) extends the portfolio after launch.
+Phase 0 – Repo Setup & Foundations (4–6 hrs)
+  0.1 Repository Initialization ✅
+  0.2 Documentation polish (README, Deliverables, Schedule)
 
----------------------------------
-Phase 0: Setup & Infrastructure
----------------------------------
-- Create GitHub org/repositories
-- Standardize README template and repo structure
-- Configure RStudio + Python integration, Binder/Colab hooks
-- Set up GitHub Pages for portfolio landing page
-Estimated Time: 8–10 hours
+Phase 1 – Core Frameworks (25–30 hrs)
+  1.1 Forecasting Frameworks
+  1.2 Anomaly Detection System
 
----------------------------------
-Phase 1: Repo Builds (Launch Projects)
----------------------------------
-1. RStudio + Python Integration
-   - Example workflows in Quarto (R + Python side by side)
-   - HTML + PDF export
-   - Clean README
-   Time: 8–10 hours
+Phase 2 – Business Applications (20–25 hrs)
+  2.1 Marketing Attribution & ROI
+  2.2 Experimentation Frameworks
 
-2. Synthetic Data Factory
-   - Build reusable synthetic dataset generator
-   - Jupyter Notebook + Binder/Colab badge
-   - Sample synthetic datasets
-   Time: 10–12 hours
+Phase 3 – Utilities & Integration (10–15 hrs)
+  3.1 R/Python Integration Setup
+  3.2 Synthetic Data Generator
 
-3. Forecasting Frameworks
-   - Build ARIMA + Prophet baseline models
-   - Create scenario comparison charts
-   - PDF executive report + HTML appendix
-   Time: 12–15 hours
+Phase 4 – Reporting & Polish (6–8 hrs)
+  4.1 Add HTML/Markdown reports
+  4.2 Interactive Shiny or dashboard demos
+  4.3 Final README polish and project linking
 
-4. Experimentation & Growth Analytics
-   - A/B testing framework with one demo experiment
-   - Quarto HTML report with interactive toggles
-   - Static HTML backup
-   Time: 12–14 hours
-
-Subtotal Repo Time: 42–51 hours
-With Setup: ~50–61 hours
-
----------------------------------
-Phase 1: QA & Documentation
----------------------------------
-- Test reproducibility across repos
-- Standardize README summaries
-- Ensure at least one static output (PDF/HTML) per repo
-Time: 6–8 hours
-
----------------------------------
-Phase 1 Total (Launch Portfolio)
----------------------------------
-~60–70 hours
-
----------------------------------
-Phase 2: Repo Builds (Post-Launch Projects)
----------------------------------
-5. Marketing Attribution & ROI Modeling
-   - Build 2–3 attribution models (last-touch, linear, simple MTA)
-   - ROI storytelling deck (PDF)
-   - HTML model comparison
-   Time: 15–18 hours
-
-6. Anomaly Detection & Alerting System
-   - Build Shiny/Streamlit dashboard for anomaly detection
-   - Create demo GIF walkthrough
-   - Static HTML fallback
-   Time: 15–18 hours
-
-Subtotal Repo Time: 30–36 hours
-
----------------------------------
-Phase 2: QA & Documentation
----------------------------------
-- Add outputs + dashboards to README
-- Final polish across repos
-Time: 4–6 hours
-
----------------------------------
-Phase 2 Total (Post-Launch)
----------------------------------
-~35–42 hours
-
----------------------------------
-Overall Portfolio Build (Phase 1 + Phase 2)
----------------------------------
-Phase 1 (Launch): 60–70 hours
-Phase 2 (Post-Launch): 35–42 hours
-Full Build: ~95–110 hours
-
-===========================
- End of Schedule
-===========================
+---
+Buffer (5–6 hrs): Debugging, polish, documentation
+Total Target: ~65–75 hrs
