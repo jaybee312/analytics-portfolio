@@ -1,72 +1,31 @@
-===========================
- Analytics Portfolio Deliverables
-===========================
+Analytics Portfolio Deliverables
 
-This portfolio consists of six repositories designed to showcase advanced analytics, forecasting, experimentation, and business intelligence.
-To meet a 60–80 hour delivery timeline, the work is split into two phases: Phase 1 (Launch) and Phase 2 (Post-Launch).
+1. Forecasting Frameworks
+   - End-to-end forecasting scripts
+   - Evaluation metrics & automated error reporting
+   - Example business forecast reports (HTML/Markdown)
 
----------------------------------
-PHASE 1 (Launch Projects)
----------------------------------
+2. Anomaly Detection System
+   - Scripts for time series decomposition and anomaly flagging
+   - Automated alert examples (Slack/email mockups)
+   - Case study report
 
-1. RStudio + Python Integration
-Purpose:
-Demonstrate seamless mixed-stack workflows between R and Python.
-Deliverables:
-- Quarto HTML report (R + Python side by side)
-- PDF backup export
-- README with setup + one-command run
-Formats: HTML, PDF
+3. Marketing Attribution & ROI
+   - Attribution models (last-touch, MTA, MMM-style approximation)
+   - ROI calculation dashboards
+   - Executive summary report
 
-2. Synthetic Data Factory
-Purpose:
-Generate realistic but safe datasets for demos & testing.
-Deliverables:
-- Jupyter Notebook with Binder/Colab badge
-- Pre-rendered HTML notebook
-- Sample synthetic CSVs
-Formats: Notebook, HTML
+4. Experimentation Frameworks
+   - A/B test simulation tools
+   - Analysis templates for lift & significance
+   - Example Shiny or HTML interactive report
 
-3. Forecasting Frameworks
-Purpose:
-Showcase forecasting methods across models & scenarios.
-Deliverables:
-- Executive PDF report (deck-style for leadership)
-- HTML appendix with technical details
-- Output charts/screenshots included in README
-Formats: PDF, HTML
+5. R/Python Integration Setup
+   - Example notebook demonstrating R + Python interoperability
+   - Instructions for environment setup
+   - Demo use case leveraging both ecosystems
 
-4. Experimentation & Growth Analytics
-Purpose:
-Framework for A/B testing and growth experiments.
-Deliverables:
-- Quarto HTML report with interactive cohort toggles
-- Static HTML backup
-- README documenting experiment workflow
-Formats: HTML
-
----------------------------------
-PHASE 2 (Post-Launch Projects)
----------------------------------
-
-5. Marketing Attribution & ROI Modeling
-Purpose:
-Compare attribution models and connect to ROI decisions.
-Deliverables:
-- PDF slide deck (storytelling and executive focus)
-- HTML side-by-side model comparison
-- README summary with key metrics
-Formats: PDF, HTML
-
-6. Anomaly Detection & Alerting System
-Purpose:
-Detect and visualize unusual events in time series data.
-Deliverables:
-- Shiny or Streamlit dashboard (interactive)
-- GIF walkthrough embedded in README
-- Static HTML report as backup
-Formats: App, GIF, HTML
-
-===========================
- End of Deliverables
-===========================
+6. Synthetic Data Generator
+   - Framework to generate reproducible synthetic datasets
+   - Configurable parameters (size, noise, seasonality, categorical splits)
+   - Example synthetic datasets used across other repos
