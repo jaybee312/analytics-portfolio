@@ -1,0 +1,15 @@
+.DS_Store
+*.swp
+.vscode/
+.Rproj.user/
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+.renv/
+.Rhistory
+data/raw/
+**/*.parquet
+**/*.zip
+outputs/*.zip
