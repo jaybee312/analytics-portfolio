@@ -1,15 +1,47 @@
-.DS_Store
-*.swp
-.vscode/
-.Rproj.user/
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
-.venv/
-venv/
-.env
-.renv/
+*.py[cod]
+*$py.class
+
+# R related
 .Rhistory
-data/raw/
-**/*.parquet
-**/*.zip
-outputs/*.zip
+.RData
+.Rproj.user/
+.Ruserdata
+.Rprofile
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# Virtual environments
+venv/
+env/
+.venv/
+.conda/
+*.Rproj
+
+# Data files (keep sensitive or large local only)
+*.csv
+*.tsv
+*.xls
+*.xlsx
+*.parquet
+*.feather
+*.json
+*.db
+
+# Logs
+*.log
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# VS Code / IDE
+.vscode/
+.idea/
+
+# Build
+dist/
+build/
+*.egg-info/
