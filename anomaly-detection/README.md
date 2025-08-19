@@ -29,8 +29,8 @@ It helps surface data anomalies, quality issues, and statistical outliers — fe
   - Time-series outliers (`tsoutliers` if time column present)
 
 - **Outputs**
-  - reports/<dataset>/outliers.csv
-  - reports/<dataset>/summary.md
+  - `reports/<dataset>/outliers.csv`
+  - `reports/<dataset>/summary.md`
 
 ---
 
@@ -78,6 +78,8 @@ It helps surface data anomalies, quality issues, and statistical outliers — fe
     ├─ artifacts/
     ├─ tests/
     │  └─ testthat/
+    ├─ requirements.md         # dependencies + schema
+    ├─ usage_guide.md          # how to run (to be added)
     ├─ DESCRIPTION             # R package metadata
     ├─ NAMESPACE
     ├─ README.md
@@ -96,6 +98,7 @@ It helps surface data anomalies, quality issues, and statistical outliers — fe
       id_cols: [customer_id]
       numeric_cols: [monthly_spend, visits_30d]
       categorical_cols: [plan_type, region]
+      time_col: signup_date
     run:
       detectors:
         iqr:
@@ -109,6 +112,12 @@ It helps surface data anomalies, quality issues, and statistical outliers — fe
           contamination: 0.02
         tsoutliers:
           enabled: false
+    controls:
+      max_flagged_pct: 5
+      min_support_rows: 3
+      whitelist:
+        columns: []
+        value_ranges: []
     reporting:
       formats: [md, csv]
       out_dir: reports/customers_aug
@@ -155,7 +164,7 @@ Remove any mention of `r/py` integration from the Data Factory suite to avoid du
     ))
 
     # Optional: Hyndman packages (for MVP+)
-    install.packages(c("weird","fable","tsibble","anomalize"))
+    install.packages(c("weird","fable","tsibble","anomalize","dbscan"))
 
     # Run sample
     Rscript scripts/run_odet.R --config configs/sample_poc.yml
@@ -169,5 +178,5 @@ Remove any mention of `r/py` integration from the Data Factory suite to avoid du
 
 - Reproducible POC run on sample data  
 - Markdown + CSV outputs produced  
-- rule_candidates.json created  
+- `rule_candidates.json` created  
 - MVP adds: batch configs, drift detection, HTML reports, Hyndman-based detectors  
