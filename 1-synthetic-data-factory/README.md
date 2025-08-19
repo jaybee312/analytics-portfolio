@@ -3,8 +3,7 @@
 ![R](https://img.shields.io/badge/R-4.5.0-blue) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
 
 A modular, configurable pipeline for generating **realistic synthetic datasets** in R.  
-This factory powers the rest of my Analytics Portfolio projects — all downstream repos pull their data from here: https://github.com/jm/analytics-portfolio
-
+This factory powers the data for this entire Analytics Portfolio. More analytics and data science projects coming soon!
 ---
 
 ## Features
@@ -57,7 +56,7 @@ Generated tables:
 
 ---
 
-## Portfolio Integration
+## Portfolio Integration (Coming Soon!)
 
 This factory is the data backbone for the rest of my analytics portfolio.  
 Check out the projects it powers:
