@@ -171,4 +171,3 @@ Remove any mention of `r/py` integration from the Data Factory suite to avoid du
 - Markdown + CSV outputs produced  
 - rule_candidates.json created  
 - MVP adds: batch configs, drift detection, HTML reports, Hyndman-based detectors  
-
