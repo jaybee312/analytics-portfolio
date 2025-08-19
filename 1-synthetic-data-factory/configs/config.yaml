@@ -1,0 +1,3 @@
+num_rows: 10000
+output_path: "data/synthetic_customers.csv"
+seed: 123
