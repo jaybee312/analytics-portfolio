@@ -1,0 +1,54 @@
+seed: 123
+marketing:
+  start_date: "2023-01-01"
+  end_date: "2024-12-31"
+
+  # population
+  n_customers: 3500
+  countries: ["US","CA","MX","GB","DE","BR","AU"]
+  segments:
+    solopreneur: 0.45
+    smb: 0.40
+    enterprise: 0.15
+  plan_mix:
+    free: 0.25
+    basic: 0.45
+    pro: 0.25
+    enterprise: 0.05
+
+  # channels config (impressions baseline + CTR bands)
+  channels:
+    search:
+      impressions: 900000
+      ctr_min: 0.02
+      ctr_max: 0.06
+    paid_social:
+      impressions: 600000
+      ctr_min: 0.01
+      ctr_max: 0.03
+    display:
+      impressions: 450000
+      ctr_min: 0.003
+      ctr_max: 0.01
+    email:
+      impressions: 120000
+      ctr_min: 0.06
+      ctr_max: 0.12
+    affiliate:
+      impressions: 220000
+      ctr_min: 0.015
+      ctr_max: 0.04
+
+  monthly_spend:
+    search: 120000
+    paid_social: 80000
+    display: 30000
+    email: 15000
+    affiliate: 25000
+
+  # funnel / conversions
+  organic_share: 0.20   # fraction of customers with no campaign attribution
+  win_rate:
+    solopreneur: 0.18
+    smb: 0.24
+    enterprise: 0.31
