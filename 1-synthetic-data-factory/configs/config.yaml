@@ -1,3 +1,7 @@
-num_rows: 10000
-output_path: "data/synthetic_customers.csv"
-seed: 123
+module: marketing
+rows: 5000
+personas:
+  - solopreneur
+  - smb
+  - enterprise
+cleanliness: typical
