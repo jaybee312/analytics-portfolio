@@ -8,4 +8,4 @@ clean:
 	rm -rf outputs/marketing
 
 test:
-	R -e "tinytest::test_all('tests')"
+	Rscript tests/test_marketing.R
