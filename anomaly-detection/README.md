@@ -1,101 +1,71 @@
-# Outlier Detection (POC → MVP, R version)
+# Outlier Detection – Requirements (MVP, R-first)
 
-An R-based module to create outlier alerting reports for any dataset produced by the **Data Factory**.  
-It surfaces data anomalies, quality issues, and statistical outliers — then feeds these learnings back into the Data Factory’s **dirty data** rules.
-
----
-
-## 0) Why R?
-
-- Consistent with the wider suite (R-first).  
-- Strong ecosystem: `data.table`, `robustbase`, `isotree`, `changepoint`, `tsoutliers`.  
-- **Hyndman ecosystem support** for time series & robust anomalies: `weird`, `anomalize`, `fable`, `tsibble`.  
-- Easy to ship reports (Markdown/HTML) via `rmarkdown`.
+This document specifies the **environment, dependencies, repo layout, config schema, and run commands** required to execute the Outlier Detection module at MVP. It is copy–paste ready for your repo.
 
 ---
 
-## 1) POC Scope (lean, fast)
+## 1) Environment
 
-**Goal:** Single dataset → single YAML config → Markdown + CSV outputs.
-
-- **Inputs**
-  - CSV (or Parquet) from Data Factory.
-  - Minimal YAML: id columns, numeric/categorical columns, optional time column.
-
-- **Detectors (POC)**
-  - Univariate: IQR (boxplot whiskers), MAD (robust z).
-  - Multivariate: Isolation Forest (`isotree`).
-  - Time series (optional): `tsoutliers` when `time_col` is present.
-
-- **Outputs**
-  - reports/<dataset>/outliers.csv — row-level flags + detector metadata.
-  - reports/<dataset>/summary.md — succinct human report.
-
-- **Success Criteria**
-  - Runnable in minutes on sample data.
-  - False-positive control: global cap and min-support.
+- R ≥ 4.3
+- macOS/Linux/Windows (tested on macOS)
+- Git (version control)
+- Optional: RStudio (for development), Make (for shortcuts)
 
 ---
 
-## 2) MVP Scope (config-driven, explainable)
+## 2) R Packages
 
-- **Batch configs**: run across many datasets from paths or a manifest.
-- **Detectors**
-  - Univariate: IQR, MAD, Z-score (opt-in), percentile caps.
-  - Multivariate: Isolation Forest, LOF (`dbscan`).
-  - Time Series (Hyndman-forward):
-    - `tsoutliers` for ARIMA-style outliers.
-    - `anomalize` (tidy decomposition + anomaly detection).
-    - `fable` + `tsibble` for tidy time-series modeling and diagnostics.
-  - **Multivariate robust**: `weird` (Hyndman) for “strange” observations.
-- **Quality checks**
-  - Nullness drift, uniqueness violations, categorical cardinality spikes, schema/type drift.
-- **Explainability & Controls**
-  - Per-detector thresholds, target-flag rate auto-tuning.
-  - Whitelists/ignores, suppression windows (e.g., quarter-end).
-- **Reporting**
-  - CSV + Markdown + HTML (RMarkdown) with plots (drift, distributions, ts panels).
-- **Backfeed**
-  - Write `artifacts/<dataset>/rule_candidates.json` with suggested rules (caps, allowed values, uniqueness keys).
-- **Integration**
-  - CLI via `Rscript scripts/run_odet.R --config ...`
+### Core (POC → MVP)
+    install.packages(c(
+      "data.table","yaml","robustbase","isotree",
+      "changepoint","tsoutliers","rmarkdown","jsonlite","testthat","dbscan"
+    ))
+
+### Hyndman ecosystem (MVP+ time series & robust multivariate)
+    install.packages(c("weird","fable","tsibble","anomalize"))
+
+Notes:
+- `isotree` provides Isolation Forest in R.
+- `dbscan` provides LOF via `dbscan::lof`.
+- `weird`, `fable`, `tsibble`, `anomalize` power advanced time-series & multivariate anomaly workflows.
+- `rmarkdown` enables HTML report generation.
 
 ---
 
-## 3) Repository Layout
+## 3) Repository Layout (MVP)
 
     outlier-detection/
     ├─ R/
-    │  ├─ detectors_univariate.R
-    │  ├─ detectors_multivariate.R
-    │  ├─ detectors_timeseries.R
-    │  ├─ quality_checks.R
-    │  ├─ reporting.R
-    │  ├─ backfeed.R
-    │  └─ utils_config.R
+    │  ├─ detectors_univariate.R        # IQR, MAD
+    │  ├─ detectors_multivariate.R      # Isolation Forest, LOF
+    │  ├─ detectors_timeseries.R        # tsoutliers / anomalize / fable interfaces
+    │  ├─ quality_checks.R              # null %, uniqueness, schema/type drift
+    │  ├─ reporting.R                   # Markdown/HTML report writers
+    │  ├─ backfeed.R                    # rule_candidates.json generator
+    │  └─ utils_config.R                # config parsing/validation helpers
     ├─ scripts/
-    │  ├─ run_odet.R            # CLI entrypoint (POC → MVP)
-    │  └─ validate_config.R     # schema checks for YAML
+    │  ├─ run_odet.R                    # CLI entrypoint (batch-aware)
+    │  └─ validate_config.R             # schema checks for YAML
     ├─ configs/
     │  ├─ sample_poc.yml
     │  └─ sample_mvp.yml
-    ├─ reports/                 # outputs (gitignored except samples)
-    ├─ artifacts/               # rule candidates, caches, models
+    ├─ data/                            # (optional) small sample files
+    ├─ reports/                         # outputs (gitignore except samples)
+    ├─ artifacts/                       # rule candidates, caches, models
     ├─ tests/
     │  └─ testthat/
-    ├─ requirements.md          # dependencies + schema
-    ├─ usage_guide.md           # how to run (POC → MVP)
-    ├─ DESCRIPTION              # R package metadata
-    ├─ NAMESPACE
-    ├─ README.md
+    ├─ requirements.md                  # THIS FILE
+    ├─ usage_guide.md                   # “how to run” doc
+    ├─ DESCRIPTION                      # R package metadata (optional)
+    ├─ NAMESPACE                        # (optional)
+    ├─ README.md                        # project overview
     └─ LICENSE
 
 ---
 
 ## 4) Config Schema (YAML)
 
-**POC example — `configs/sample_poc.yml`**
-
+### POC (single dataset) – `configs/sample_poc.yml`
     dataset_name: customers_aug
     input:
       path: data/customers_aug.csv
@@ -106,17 +76,10 @@ It surfaces data anomalies, quality issues, and statistical outliers — then fe
       time_col: signup_date
     run:
       detectors:
-        iqr:
-          enabled: true
-          whisker_k: 1.5
-        mad:
-          enabled: true
-          z_thresh: 3.5
-        isolation_forest:
-          enabled: true
-          contamination: 0.02
-        tsoutliers:
-          enabled: false
+        iqr: { enabled: true, whisker_k: 1.5 }
+        mad: { enabled: true, z_thresh: 3.5 }
+        isolation_forest: { enabled: true, contamination: 0.02 }
+        tsoutliers: { enabled: false }
     controls:
       max_flagged_pct: 5
       min_support_rows: 1
@@ -130,9 +93,7 @@ It surfaces data anomalies, quality issues, and statistical outliers — then fe
       emit_rule_candidates: true
       out_dir: artifacts/customers_aug
 
-**MVP highlights — `configs/sample_mvp.yml`**
-
-    # Multiple datasets via glob/manifest; add HTML reporting and Hyndman detectors
+### MVP (batch, advanced detectors) – `configs/sample_mvp.yml`
     datasets:
       - name: customers_aug
         input: { path: data/customers_aug.csv }
@@ -152,16 +113,19 @@ It surfaces data anomalies, quality issues, and statistical outliers — then fe
         iqr: { enabled: true, whisker_k: 1.5 }
         mad: { enabled: true, z_thresh: 3.5 }
         isolation_forest: { enabled: true, contamination: 0.02 }
-        lof: { enabled: true, minPts: 10 }             # dbscan::lof
-        tsoutliers: { enabled: true }
+        lof: { enabled: true, minPts: 10 }                   # dbscan::lof
+        tsoutliers: { enabled: true }                        # ARIMA-style outliers
         anomalize: { enabled: true, method: "stl", alpha: 0.05 }
-        weird: { enabled: true }                        # multivariate robust
+        weird: { enabled: true }                             # multivariate “strange” pts
     controls:
       max_flagged_pct: 5
       min_support_rows: 5
       suppressions:
         - dataset: web_traffic
-          window: { start: 2024-12-24, end: 2024-12-26 }  # holiday spike ignore
+          window: { start: 2024-12-24, end: 2024-12-26 }     # ignore holiday spikes
+      whitelist:
+        columns: []
+        value_ranges: []
     reporting:
       formats: [md, csv, html]
       out_dir_root: reports
@@ -171,89 +135,68 @@ It surfaces data anomalies, quality issues, and statistical outliers — then fe
 
 ---
 
-## 5) CLI Usage
+## 5) CLI Commands
 
-**POC (single dataset)**
-
+### Run POC (single dataset)
     Rscript scripts/run_odet.R --config configs/sample_poc.yml
 
-**Batch (MVP)**
-
+### Run MVP batch (multiple datasets)
     Rscript scripts/run_odet.R --config configs/sample_mvp.yml
 
-**Validate configs**
-
+### Validate configs
     Rscript scripts/validate_config.R configs/*.yml
 
 ---
 
-## 6) Outputs
+## 6) Outputs (MVP)
 
-- **reports/<dataset>/outliers.csv** — row-level flags  
-  - row_index, detector, score, severity, columns, notes
-- **reports/<dataset>/summary.md / summary.html** — findings + drift snapshots + ts panels (MVP)  
-- **artifacts/<dataset>/rule_candidates.json** — proposed upstream rules
-
----
-
-## 7) Integrating with the Data Factory
-
-- **Inputs:** reads Data Factory outputs (CSV/Parquet).  
-- **Backfeed:** writes `rule_candidates.json` per dataset; Data Factory ingests to expand **dirty data** rules.  
-- **Contract:** both repos are config-driven; version detectors and thresholds in report headers.
+- `reports/<dataset>/outliers.csv`  
+  - Columns: `row_index, detector, score, severity, columns, notes`
+- `reports/<dataset>/summary.md` and (if enabled) `summary.html`  
+  - Findings, detector params, drift snapshots, time‑series panels
+- `artifacts/<dataset>/rule_candidates.json`  
+  - Suggested caps/ranges, allowed values, uniqueness keys for Data Factory backfeed
 
 ---
 
-## 8) Install & Quick Start
+## 7) Quality & Controls
 
-**Core (POC)**
-
-    install.packages(c(
-      "data.table","yaml","robustbase","isotree",
-      "changepoint","tsoutliers","rmarkdown","jsonlite","testthat","dbscan"
-    ))
-
-**Hyndman ecosystem (MVP+)**
-
-    install.packages(c("weird","fable","tsibble","anomalize"))
-
-**Run**
-
-    Rscript scripts/run_odet.R --config configs/sample_poc.yml
-    # Then open: reports/<dataset>/summary.md
+- **Flag rate control**: `controls.max_flagged_pct` caps total flagged rows (by highest scores).
+- **Minimum support**: `controls.min_support_rows` drops columns with too few flags.
+- **Suppressions**: skip known spike windows (e.g., holidays, quarter‑end).
+- **Whitelists**: ignore columns or value ranges entirely.
+- **Versioning**: write detector versions/thresholds into report headers.
 
 ---
 
-## 9) Removing the Old R/Py Module
+## 8) Validation & Testing
 
-This repo replaces any R/Python hybrid module for outlier work.  
-Clean up the suite by removing references to the deprecated r/py module and updating diagrams/CI to point here.
-
----
-
-## 10) Definition of Done
-
-- **POC**
-  - Runnable on sample data.
-  - IQR + MAD + Isolation Forest enabled via YAML.
-  - Markdown + CSV outputs present.
-
-- **MVP**
-  - Batch configs, HTML reports with plots.
-  - Hyndman detectors (`weird`, `anomalize`, `fable` + `tsibble`) integrated.
-  - Quality checks + backfeed JSON produced.
-  - Controls documented; thresholds versioned in reports.
+- Config schema checks: `scripts/validate_config.R`
+- Unit tests (testthat) per module in `tests/testthat/`
+- CI smoke: run POC on sample data, publish sample report artifact
 
 ---
 
-## 11) Notes on Detector Behavior (practical defaults)
+## 9) Integration Contract (with Data Factory)
 
-- **IQR**: start with `k = 1.5` for discovery; increase to `3.0` to reduce flags.  
-- **MAD**: `z_thresh = 3.5` is robust; tighten/loosen per dataset.  
-- **Isolation Forest**: `contamination = 0.01–0.03` typical; set `auto` when we add auto-tuner.  
-- **`weird`**: best for multivariate “strangeness” without heavy modeling; use after basic cleaning.  
-- **`anomalize`**/**`fable`**: ideal for seasonal/weekly time series; ensure `tsibble` index and keys are set.
+- **Input**: reads Data Factory outputs (CSV/Parquet path in YAML).
+- **Backfeed**: emits `artifacts/<dataset>/rule_candidates.json` for rule ingestion (caps, allowed values, uniqueness).
+- **Design**: config‑driven, reproducible; both repos keep YAML as the single source of truth.
 
 ---
 
-**This README is the single source of truth for the Outlier Detection module (R-first) — including Hyndman-based detectors — and is safe to paste into your repo as-is.**
+## 10) Practical Defaults
+
+- IQR: `whisker_k = 1.5` (exploratory) → `3.0` (conservative)
+- MAD: `z_thresh = 3.5`
+- Isolation Forest: `contamination = 0.01–0.03` (or `auto` when tuner added)
+- LOF: start with `minPts = max(10, round(0.02 * n_rows))`
+- Hyndman stack:
+  - `tsoutliers` for ARIMA-oriented outliers
+  - `anomalize` for decomposition‑based anomalies
+  - `fable`+`tsibble` for tidy time‑series modeling
+  - `weird` for robust multivariate “strange” points
+
+---
+
+**This file is the authoritative requirements spec for the Outlier Detection MVP (R-first, Hyndman-enabled).**
