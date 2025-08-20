@@ -1,0 +1,49 @@
+# Outlier Detection – POC Config
+# Copy this file to configs/sample_poc.yml in your repo.
+# Update `dataset_name` and `input.path` to point to your dataset.
+
+dataset_name: customers_aug
+
+input:
+  path: data/customers_aug.csv   # <- replace with your file path (CSV or Parquet)
+  # format is inferred by extension (csv, parquet). Add 'format' if you need to force it.
+  # format: csv
+
+schema:
+  id_cols: [customer_id]
+  numeric_cols: [monthly_spend, visits_30d]
+  categorical_cols: [plan_type, region]
+  time_col: signup_date          # optional; enable tsoutliers below if present
+
+run:
+  detectors:
+    iqr:
+      enabled: true
+      whisker_k: 1.5             # 1.5 = standard boxplot whisker; 3.0 = more conservative
+    mad:
+      enabled: true
+      z_thresh: 3.5              # robust z-score cutoff
+    isolation_forest:
+      enabled: true
+      contamination: 0.02        # target fraction of outliers; set to 'auto' if supported
+    tsoutliers:
+      enabled: false             # set true only if 'time_col' is defined
+      # method-specific params can be added here later
+
+controls:
+  max_flagged_pct: 5             # cap % of rows flagged to control false positives
+  min_support_rows: 1            # require at least N rows supporting a pattern to flag
+  whitelist:
+    columns: []                  # columns to ignore entirely
+    value_ranges: []             # e.g., [{column: visits_30d, min: 0, max: 60}]
+
+reporting:
+  formats: [md, csv]             # add 'html' at MVP when RMarkdown is wired up
+  out_dir: reports/customers_aug # will be created if missing
+  severity_thresholds:
+    high: 0.01                   # >= 1% of rows affected in a column → high
+    medium: 0.03
+
+backfeed:
+  emit_rule_candidates: true
+  out_dir: artifacts/customers_aug
