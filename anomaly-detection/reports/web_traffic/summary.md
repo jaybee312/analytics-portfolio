@@ -1,7 +1,7 @@
-# Outlier Report: customers_aug
+# Outlier Report: web_traffic
 
 ## Summary
-- Flags found: 89
+- Flags found: 62
 
 ## Detectors Enabled
 - IQR: yes
