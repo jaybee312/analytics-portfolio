@@ -200,3 +200,44 @@ Notes:
 ---
 
 **This file is the authoritative requirements spec for the Outlier Detection MVP (R-first, Hyndman-enabled).**
+
+---
+
+## MVP Status (v0.1.0-mvp)
+
+This repository has reached MVP status for the Outlier Detection module.
+
+### What works
+- Detectors: IQR, MAD, Isolation Forest, LOF (+ optional time-series: tsoutliers, anomalize, fable)
+- Config: multi-dataset via YAML (configs/sample_mvp.yml, configs/sample_mvp_spiky.yml)
+- Artifacts:
+  - reports/<dataset>/outliers.csv
+  - reports/<dataset>/diagnostics.json (per-column cutoffs, multivariate thresholds, top flags, runtimes)
+  - reports/<dataset>/summary.md
+  - reports/<dataset>/summary.html (beta)
+  - artifacts/<dataset>/rule_candidates.json
+
+### HTML Report (beta)
+The HTML summary is generated from reports/templates/summary.Rmd and includes:
+- Per-column stats with cutoffs (IQR/MAD)
+- Histograms & boxplots
+- Optional time-series anomaly visuals (anomalize)
+- Interactive tables (if DT is installed)
+- Light/Dark theme toggle (reports/assets/light.css and reports/assets/dark.css)
+
+> Beta note: The HTML layout and content are still being polished. Expect minor visual tweaks and expanded sections in future versions.
+
+### Run
+Rscript scripts/run_odet.R --config configs/sample_mvp.yml
+Rscript scripts/run_odet.R --config configs/sample_mvp_spiky.yml
+open reports/customers_aug/summary.html
+
+### Tests
+Rscript scripts/run_tests.R
+# Artifacts: tests/reports/test-summary.txt, junit.xml, session-info.txt
+
+### Next (post-MVP)
+- Tune thresholds per domain + auto-sensitivity
+- Expand HTML content; add section links + filters
+- Data Factory integration for “dirty data” feedback
+- CI checks for diagnostics schema + regression detection

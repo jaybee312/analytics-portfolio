@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Pipeline – fixtures e2e" timestamp="2025-08-25T22:50:02Z" hostname="Jonathans-MacBook-Pro.local" tests="14" skipped="0" failures="0" errors="0" time="5.28">
+    <testcase time="0.00800000000000001" classname="Pipeline_fixtures_e2e" name="run_odet_produces_expected_artifacts_and_non_empty_outliers"/>
+    <testcase time="5.223" classname="Pipeline_fixtures_e2e" name="run_odet_produces_expected_artifacts_and_non_empty_outliers"/>
+    <testcase time="0.00399999999999956" classname="Pipeline_fixtures_e2e" name="run_odet_produces_expected_artifacts_and_non_empty_outliers"/>
+    <testcase time="0.00300000000000011" classname="Pipeline_fixtures_e2e" name="run_odet_produces_expected_artifacts_and_non_empty_outliers"/>
+    <testcase time="0.00399999999999956" classname="Pipeline_fixtures_e2e" name="run_odet_produces_expected_artifacts_and_non_empty_outliers"/>
+    <testcase time="0.00399999999999956" classname="Pipeline_fixtures_e2e" name="run_odet_produces_expected_artifacts_and_non_empty_outliers"/>
+    <testcase time="0.00399999999999956" classname="Pipeline_fixtures_e2e" name="run_odet_produces_expected_artifacts_and_non_empty_outliers"/>
+    <testcase time="0.00400000000000134" classname="Pipeline_fixtures_e2e" name="run_odet_produces_expected_artifacts_and_non_empty_outliers"/>
+    <testcase time="0.00399999999999956" classname="Pipeline_fixtures_e2e" name="run_odet_produces_expected_artifacts_and_non_empty_outliers"/>
+    <testcase time="0.00300000000000011" classname="Pipeline_fixtures_e2e" name="run_odet_produces_expected_artifacts_and_non_empty_outliers"/>
+    <testcase time="0.00699999999999967" classname="Pipeline_fixtures_e2e" name="run_odet_produces_expected_artifacts_and_non_empty_outliers"/>
+    <testcase time="0.00399999999999956" classname="Pipeline_fixtures_e2e" name="run_odet_produces_expected_artifacts_and_non_empty_outliers"/>
+    <testcase time="0.00400000000000134" classname="Pipeline_fixtures_e2e" name="run_odet_produces_expected_artifacts_and_non_empty_outliers"/>
+    <testcase time="0.00399999999999956" classname="Pipeline_fixtures_e2e" name="run_odet_produces_expected_artifacts_and_non_empty_outliers"/>
+  </testsuite>
+  <testsuite name="Univariate detectors" timestamp="2025-08-25T22:50:07Z" hostname="Jonathans-MacBook-Pro.local" tests="7" skipped="0" failures="0" errors="0" time="0.031">
+    <testcase time="0.0109999999999992" classname="Univariate_detectors" name="iqr_flags_and_mad_flags_exist_and_flag_simple_spikes"/>
+    <testcase time="0.00400000000000134" classname="Univariate_detectors" name="iqr_flags_and_mad_flags_exist_and_flag_simple_spikes"/>
+    <testcase time="0.00299999999999834" classname="Univariate_detectors" name="iqr_flags_and_mad_flags_exist_and_flag_simple_spikes"/>
+    <testcase time="0.00100000000000122" classname="Univariate_detectors" name="iqr_flags_and_mad_flags_exist_and_flag_simple_spikes"/>
+    <testcase time="0.00399999999999956" classname="Univariate_detectors" name="iqr_flags_and_mad_flags_exist_and_flag_simple_spikes"/>
+    <testcase time="0.00399999999999956" classname="Univariate_detectors" name="iqr_flags_and_mad_flags_exist_and_flag_simple_spikes"/>
+    <testcase time="0.00400000000000134" classname="Univariate_detectors" name="iqr_flags_and_mad_flags_exist_and_flag_simple_spikes"/>
+  </testsuite>
+</testsuites>

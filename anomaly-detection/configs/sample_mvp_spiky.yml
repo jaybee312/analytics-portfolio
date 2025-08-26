@@ -1,0 +1,51 @@
+datasets:
+  - name: customers_spiky
+    input:
+      path: data/customers_spiky.csv
+    schema:
+      id_cols: [customer_id]
+      numeric_cols: [monthly_spend, visits_30d]
+      categorical_cols: [plan_type, region]
+      time_col: signup_date
+
+  - name: web_traffic_spiky
+    input:
+      path: data/web_traffic_spiky.csv
+    schema:
+      id_cols: [page_id]
+      numeric_cols: [sessions, bounce_rate]
+      categorical_cols: []
+      time_col: date
+
+run:
+  detectors:
+    # Univariate (more sensitive)
+    iqr: { enabled: true, whisker_k: 1.2 }     # was 1.5
+    mad: { enabled: true, z_thresh: 2.5 }      # was 3.5
+
+    # Multivariate (more flags)
+    isolation_forest:
+      enabled: true
+      contamination: 0.20                      # flag ~20% highest scores
+      ntrees: 200
+      sample_size: 256
+    lof:
+      enabled: true
+      minPts: 5
+
+    # TS detectors (enabled)
+    tsoutliers: { enabled: true }
+    anomalize:  { enabled: true, method: stl, alpha: 0.05 }
+    fable:      { enabled: false }
+
+controls:
+  max_flagged_pct: 50       # allow more rows to be flagged for demo
+  min_support_rows: 1
+
+reporting:
+  formats: [md, html, csv]
+  out_dir_root: reports
+
+backfeed:
+  emit_rule_candidates: true
+  out_dir_root: artifacts

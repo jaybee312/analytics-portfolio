@@ -1,0 +1,174 @@
+---
+title: "Outlier Report"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    theme: null
+    df_print: paged
+params:
+  dataset_name: "dataset"
+  dt_path: "data.csv"
+  outliers_path: "outliers.csv"
+  diagnostics_path: "diagnostics.json"
+---
+
+<!-- Theme styles -->
+<link rel="stylesheet" href="../assets/light.css" id="theme-light">
+<link rel="stylesheet" href="../assets/dark.css"  id="theme-dark" disabled>
+
+<!-- Theme toggle -->
+<button class="btn-toggle" id="themeToggle" title="Toggle theme">🌗 Toggle Theme</button>
+<script>
+(function(){
+  const light = document.getElementById('theme-light');
+  const dark  = document.getElementById('theme-dark');
+  const btn   = document.getElementById('themeToggle');
+  const key   = 'odet-theme';
+  function setTheme(mode){
+    if(mode === 'dark'){ dark.disabled = false; light.disabled = true; }
+    else { dark.disabled = true; light.disabled = false; }
+    try{ localStorage.setItem(key, mode); }catch(e){}
+  }
+  const saved = (function(){ try{ return localStorage.getItem(key); }catch(e){ return null; } })();
+  setTheme(saved === 'dark' ? 'dark' : 'light');
+  btn.addEventListener('click', function(){
+    const now = dark.disabled ? 'dark' : 'light';
+    setTheme(now);
+  });
+})();
+</script>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
+
+suppressPackageStartupMessages({
+  library(data.table)
+  library(jsonlite)
+  library(ggplot2)
+})
+
+has_dt_pkg <- requireNamespace("DT", quietly = TRUE)
+if (has_dt_pkg) { DT <- asNamespace("DT") }
+
+ds_name  <- params$dataset_name
+dt       <- tryCatch(fread(params$dt_path), error = function(e) NULL)
+outliers <- tryCatch(fread(params$outliers_path), error = function(e) NULL)
+diag     <- tryCatch(jsonlite::fromJSON(params$diagnostics_path, simplifyVector = FALSE),
+                     error = function(e) NULL)
+
+has_dt   <- !is.null(dt)
+has_out  <- !is.null(outliers) && nrow(outliers) > 0
+has_diag <- !is.null(diag)
+
+render_table <- function(df, ...) {
+  if (has_dt_pkg) DT$datatable(df, options=list(pageLength=10, scrollX=TRUE), rownames=FALSE, ...)
+  else df
+}
+```
+
+# Summary
+
+**Dataset:** `r ds_name`  
+**Rows:** `r if (has_dt) nrow(dt) else "?"` • **Columns:** `r if (has_dt) ncol(dt) else "?"`  
+
+**Artifacts:**  
+- Raw data: `r params$dt_path`  
+- Outliers CSV: `r params$outliers_path`  
+- Diagnostics JSON: `r params$diagnostics_path`
+
+---
+
+# Detector Settings & Thresholds
+
+```{r}
+if (has_diag) {
+  dets <- diag$detectors
+  df <- data.frame(detector=names(dets), t(sapply(dets, function(x) unlist(x))),
+                   check.names=FALSE, row.names=NULL)
+  print(render_table(df))
+}
+```
+
+---
+
+# Top Outliers
+
+```{r}
+if (has_diag && !is.null(diag$top_flags)) {
+  for (d in names(diag$top_flags)) {
+    cat("## ", d, "\n", sep="")
+    tf <- diag$top_flags[[d]]
+    if (length(tf)) print(render_table(as.data.frame(tf, check.names=FALSE)))
+  }
+}
+```
+
+---
+
+# Per-Column Diagnostics
+
+```{r}
+if (has_diag && length(diag$columns)) {
+  for (col in names(diag$columns)) {
+    cd <- diag$columns[[col]]
+    cat("## ", col, "\n", sep="")
+    tab <- data.frame(
+      metric = c("n","n_na","pct_na","mean","sd","min","q1","median","q3","max",
+                 "IQR_lower","IQR_upper","MAD_lower","MAD_upper"),
+      value  = c(cd$counts$n, cd$counts$n_na, cd$counts$pct_na,
+                 cd$summary$mean, cd$summary$sd, cd$summary$min,
+                 cd$summary$q1, cd$summary$median, cd$summary$q3, cd$summary$max,
+                 cd$iqr$lower, cd$iqr$upper, cd$mad$lower, cd$mad$upper),
+      row.names=NULL, check.names=FALSE
+    )
+    print(render_table(tab))
+
+    cat("<details><summary>Visuals</summary>\n")
+    if (has_dt && col %in% names(dt)) {
+      x <- suppressWarnings(as.numeric(dt[[col]]))
+      dfp <- data.frame(x=x)
+      print(ggplot(dfp, aes(x=x)) + geom_histogram(bins=30))
+      print(ggplot(dfp, aes(y=x, x=1)) + geom_boxplot(outlier.shape=NA))
+    }
+    cat("</details>\n")
+  }
+}
+```
+
+---
+
+# Time-Series Anomaly Visuals
+
+```{r}
+if (has_diag && !is.null(diag$timeseries) && has_dt) {
+  time_col <- diag$timeseries$time_col
+  if (requireNamespace("anomalize", quietly=TRUE)) {
+    library(anomalize); library(dplyr); library(tibble)
+    for (col in names(diag$columns)) {
+      if (!col %in% names(dt)) next
+      tvec <- suppressWarnings(as.Date(dt[[time_col]]))
+      x <- suppressWarnings(as.numeric(dt[[col]]))
+      ord <- order(tvec); df <- tibble(time=tvec[ord], value=x[ord])
+      if (nrow(df)<10) next
+      md <- suppressMessages(
+        df %>% time_decompose(value, method="stl") %>%
+          anomalize(remainder, alpha=0.05) %>%
+          time_recompose()
+      )
+      cat("## Anomalize: ", col, "\n", sep="")
+      print(ggplot(md, aes(x=time, y=observed)) +
+              geom_line() +
+              geom_point(data=subset(md, anomaly=="Yes"), aes(y=observed), color="red"))
+    }
+  }
+}
+```
+
+---
+
+# Full Outliers Table
+
+```{r}
+if (has_out) print(render_table(outliers))
+```

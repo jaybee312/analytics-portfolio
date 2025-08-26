@@ -1,0 +1,12 @@
+:root{
+  --bg:#0b1020; --fg:#e5e7eb; --muted:#9ca3af; --card:#0f152b; --accent:#60a5fa; --border:#1f2a44;
+  --code:#e5e7eb; --code-bg:#0d1226;
+}
+html, body{ background:var(--bg); color:var(--fg); }
+a{ color:var(--accent); }
+hr{ border-color:var(--border); }
+pre, code { color: var(--code); background: var(--code-bg); }
+table, th, td { border-color: var(--border); }
+details { background: var(--card); border-color: var(--border); }
+.btn-toggle { background: var(--card); color: var(--fg); border-color: var(--border); }
+.figure, .plot { background: var(--card); border-color: var(--border); }
